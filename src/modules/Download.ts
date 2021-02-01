@@ -14,7 +14,7 @@ class Downloader {
     this.path = path.resolve(Config.outputPath, Config.outputFileName);
   }
 
-  async exec(): Promise<void> {
+  async exec(): Promise<youtubedl.Info> {
     const spinner = ora('Creating output folder').start();
     await fs.promises.mkdir(Config.outputPath, { recursive: true });
     spinner.text = "Getting video's information";
@@ -23,7 +23,11 @@ class Downloader {
     );
     spinner.stop();
     console.log(`${'title:'.padEnd(15, ' ')}${videoInfo.title}`);
-    console.log(`${'duration:'.padEnd(15, ' ')}${videoInfo.duration}`);
+    console.log(
+      `${'duration:'.padEnd(15, ' ')}${videoInfo.duration}, ${
+        videoInfo._duration_hms
+      }`,
+    );
     console.log(`${'link:'.padEnd(15, ' ')}${videoInfo.webpage_url}`);
     console.log(`${'thumbnail:'.padEnd(15, ' ')}${videoInfo.thumbnail}`);
     console.log(`${'uploader:'.padEnd(15, ' ')}${videoInfo.uploader}`);
@@ -40,6 +44,7 @@ class Downloader {
     spinner.text = 'Saving video into folder';
     video.pipe(fs.createWriteStream(this.path));
     spinner.stop();
+    return videoInfo;
   }
 }
 
