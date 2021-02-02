@@ -25,6 +25,7 @@
         "prettier/prettier": "error"
     },
     "settings": {
-        "import-resover": "eslint-import-resolver-typescript"
+        "import-resover": "eslint-import-resolver-typescript",
+        "camelcase": "off"
     }
 }
