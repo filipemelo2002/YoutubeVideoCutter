@@ -13,12 +13,15 @@ class Cutter {
   }
 
   async exec({ start = '00:00:00', interval, end }: ExecProps): Promise<void> {
+    const spinner = ora('Processing Video...').start();
+    spinner.prefixText = '[CUTTING MODULE]';
     ffmpeg.setFfmpegPath(ffmpegPath.path);
     let count = 1;
     const startDateObj = stringHHMMSSToDateObject(start);
     const endDateObj = stringHHMMSSToDateObject(end);
 
     const recursiveCutting = async () => {
+      spinner.start('Processing PART ' + count);
       if (
         startDateObj.getTime() <
         endDateObj.getTime() - (endDateObj.getSeconds() - Number(interval))
@@ -48,8 +51,9 @@ class Cutter {
             })
             .run();
         });
+        spinner.stopAndPersist();
         console.log(
-          `Part ${count}`,
+          `\nPart ${count}`,
           `${this.filename.split('.')[0]}-PART${count}.${
             this.filename.split('.')[1]
           }`,
